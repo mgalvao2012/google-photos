@@ -19,25 +19,26 @@ function loadFromAlbum(name, id) {
   showLoadingDialog();
   // Make an ajax request to the backend to load from an album.
   $.ajax({
-    type: 'POST',
-    url: '/loadFromAlbum',
-    dataType: 'json',
-    data: {albumId: id},
+    type: "POST",
+    url: "/loadFromAlbum",
+    dataType: "json",
+    data: { albumId: id },
     success: (data) => {
-      console.log('Albums imported:' + JSON.stringify(data.parameters));
+      data.photos = data.photos.sort(function(a, b){return 0.5 - Math.random()});
+      console.log("Albums imported:" + JSON.stringify(data.parameters));
       if (data.photos && data.photos.length) {
         // Photos were loaded from the album, open the photo frame preview
         // queue.
-        window.location = '/';
+        window.location = "/";
       } else {
         // No photos were loaded. Display an error.
-        handleError('Couldn\'t import album', 'Album is empty.');
+        handleError("Couldn't import album", "Album is empty.");
       }
       hideLoadingDialog();
     },
     error: (data) => {
-      handleError('Couldn\'t import album', data);
-    }
+      handleError("Couldn't import album", data);
+    },
   });
 }
 
@@ -48,14 +49,14 @@ function loadFromAlbum(name, id) {
 function listAlbums() {
   hideError();
   showLoadingDialog();
-  $('#albums').empty();
+  $("#albums").empty();
 
   $.ajax({
-    type: 'GET',
-    url: '/getAlbums',
-    dataType: 'json',
+    type: "GET",
+    url: "/getAlbums",
+    dataType: "json",
     success: (data) => {
-      console.log('Loaded albums: ' + data.albums);
+      console.log("Loaded albums: " + data.albums);
       // Render each album from the backend in its own row, consisting of
       // title, cover image, number of items, link to Google Photos and a
       // button to add it to the photo frame.
@@ -67,76 +68,77 @@ function listAlbums() {
         const thumbnailUrl = `${item.coverPhotoBaseUrl}=w100-h100`;
 
         // Set up a Material Design Lite list.
-        const materialDesignLiteList =
-            $('<li />').addClass('mdl-list__item mdl-list__item--two-line');
+        const materialDesignLiteList = $("<li />").addClass(
+          "mdl-list__item mdl-list__item--two-line"
+        );
 
         // Create the primary content for this list item.
-        const primaryContentRoot =
-            $('<div />').addClass('mdl-list__item-primary-content');
+        const primaryContentRoot = $("<div />").addClass(
+          "mdl-list__item-primary-content"
+        );
         materialDesignLiteList.append(primaryContentRoot);
 
         // The image showing the album thumbnail.
-        const primaryContentImage = $('<img />')
-                                        .attr('src', thumbnailUrl)
-                                        .attr('alt', item.title)
-                                        .addClass('mdl-list__item-avatar');
+        const primaryContentImage = $("<img />")
+          .attr("src", thumbnailUrl)
+          .attr("alt", item.title)
+          .addClass("mdl-list__item-avatar");
         primaryContentRoot.append(primaryContentImage);
 
         // The title of the album as the primary title of this item.
-        const primaryContentTitle = $('<div />').text(item.title);
+        const primaryContentTitle = $("<div />").text(item.title);
         primaryContentRoot.append(primaryContentTitle);
 
         // The number of items in this album as the sub title.
-        const primaryContentSubTitle =
-            $('<div />')
-                .text(`(${item.mediaItemsCount} items)`)
-                .addClass('mdl-list__item-sub-title');
+        const primaryContentSubTitle = $("<div />")
+          .text(`(${item.mediaItemsCount} items)`)
+          .addClass("mdl-list__item-sub-title");
         primaryContentRoot.append(primaryContentSubTitle);
 
         // Secondary content consists of two links with buttons.
-        const secondaryContentRoot =
-            $('<div />').addClass('mdl-list__item-secondary-action');
+        const secondaryContentRoot = $("<div />").addClass(
+          "mdl-list__item-secondary-action"
+        );
         materialDesignLiteList.append(secondaryContentRoot);
 
-
         // The 'add to photo frame' link.
-        const linkToAddToPhotoFrame = $('<a />')
-                                          .addClass('album-title')
-                                          .attr('data-id', item.id)
-                                          .attr('data-title', item.title);
+        const linkToAddToPhotoFrame = $("<a />")
+          .addClass("album-title")
+          .attr("data-id", item.id)
+          .attr("data-title", item.title);
         secondaryContentRoot.append(linkToAddToPhotoFrame);
 
-
         // The button for the 'add to photo frame' link.
-        const addToPhotoFrameButton =
-            $('<button />')
-                .addClass(
-                    'mdl-button mdl-js-button mdl-button--raised mdl-button--accent')
-                .text('Add to frame');
+        const addToPhotoFrameButton = $("<button />")
+          .addClass(
+            "mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+          )
+          .text("Add to frame");
         linkToAddToPhotoFrame.append(addToPhotoFrameButton);
 
         // The 'open in Google Photos' link.
-        const linkToGooglePhotos =
-            $('<a />').attr('target', '_blank').attr('href', item.productUrl);
+        const linkToGooglePhotos = $("<a />")
+          .attr("target", "_blank")
+          .attr("href", item.productUrl);
         secondaryContentRoot.append(linkToGooglePhotos);
 
         // The button for the 'open in Google Photos' link.
-        const googlePhotosButton = $('<button />')
-                                       .addClass('gp-button raised')
-                                       .text('Open in Google Photos');
+        const googlePhotosButton = $("<button />")
+          .addClass("gp-button raised")
+          .text("Open in Google Photos");
         linkToGooglePhotos.append(googlePhotosButton);
 
         // Add the list item to the list of albums.
-        $('#albums').append(materialDesignLiteList);
+        $("#albums").append(materialDesignLiteList);
       });
 
       hideLoadingDialog();
-      console.log('Albums loaded.');
+      console.log("Albums loaded.");
     },
     error: (data) => {
       hideLoadingDialog();
-      handleError('Couldn\'t load albums', data);
-    }
+      handleError("Couldn't load albums", data);
+    },
   });
 }
 
@@ -145,12 +147,12 @@ $(document).ready(() => {
   listAlbums();
 
   // Clicking the 'add to frame' button starts an import request.
-  $('#albums').on('click', '.album-title', (event) => {
+  $("#albums").on("click", ".album-title", (event) => {
     const target = $(event.currentTarget);
-    const albumId = target.attr('data-id');
-    const albumTitle = target.attr('data-title');
+    const albumId = target.attr("data-id");
+    const albumTitle = target.attr("data-title");
 
-    console.log('Importing album: ' + albumTitle);
+    console.log("Importing album: " + albumTitle);
 
     loadFromAlbum(albumTitle, albumId);
   });

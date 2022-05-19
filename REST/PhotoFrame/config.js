@@ -17,17 +17,17 @@
 export const config = {};
 
 // The OAuth client ID from the Google Developers console.
-config.oAuthClientID = 'ADD YOUR CLIENT ID';
+config.oAuthClientID = `${process.env.CLIENT_ID}`;
 
 // The OAuth client secret from the Google Developers console.
-config.oAuthclientSecret = 'ADD YOUR CLIENT SECRET';
+config.oAuthclientSecret = `${process.env.CLIENT_SECRET}`;
 
 // The callback to use for OAuth requests. This is the URL where the app is
 // running. For testing and running it locally, use 127.0.0.1.
-config.oAuthCallbackUrl = 'http://127.0.0.1:8080/auth/google/callback';
+config.oAuthCallbackUrl = `${process.env.URL_CALLBACK}`;
 
 // The port where the app should listen for requests.
-config.port = 8080;
+config.port = process.env.PORT;
 
 // The scopes to request. The app requires the photoslibrary.readonly and
 // plus.me scopes.

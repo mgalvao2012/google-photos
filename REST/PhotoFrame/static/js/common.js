@@ -14,12 +14,12 @@
 
 // Displays the overlay loading dialog.
 function showLoadingDialog() {
-  $('.loading-dialog').show();
+  $(".loading-dialog").show();
 }
 
 // Hides the overlay loading dialog.
 function hideLoadingDialog() {
-  $('.loading-dialog').hide();
+  $(".loading-dialog").hide();
 }
 
 // Shows an error with a title and a JSON object that is pretty printed.
@@ -32,17 +32,17 @@ function showError(title, text) {
   // Hide the loading dialog, just in case it is still being displayed.
   hideLoadingDialog();
 
-  $('#errorTitle').text(title);
-  $('#errorMessage').text(text);
-  $('#error').show();
+  $("#errorTitle").text(title);
+  $("#errorMessage").text(text);
+  $("#error").show();
 
   // Scroll to show the error message on screen.
-  $('html,body').animate({scrollTop: $('#error').offset().top}, 300);
+  $("html,body").animate({ scrollTop: $("#error").offset().top }, 300);
 }
 
 // Hides the error message.
 function hideError() {
-  $('#error').hide();
+  $("#error").hide();
 }
 
 // Handles errors returned from the backend.
@@ -50,15 +50,15 @@ function hideError() {
 // For authentication issues, the user is redirected to the log out screen.
 // Otherwise, the error is shown to the user (and prettyprinted if possible).
 function handleError(title, data) {
-  console.log('Error: ' + JSON.stringify(data));
+  console.log("Error: " + JSON.stringify(data));
 
   if (data.status == 401) {
     // Authentication error. Redirect back to the log in screen.
-    window.location = '/logout';
+    window.location = "/logout";
   } else if (data.status == 0) {
     // Server could not be reached from the request.
     // It could be blocked, unavailable or unresponsive.
-    showError(title, 'Server could not be reached. Please try again.');
+    showError(title, "Server could not be reached. Please try again.");
   } else if (data.responseJSON) {
     // JSON error that can be formatted.
     showJsonError(title, data.responseJSON);
